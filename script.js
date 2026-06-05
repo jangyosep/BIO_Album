@@ -211,7 +211,7 @@ function stopMusic() {
   isMusicPlaying = false;
   musicToggle.classList.remove("is-playing");
   musicToggle.setAttribute("aria-pressed", "false");
-  musicLabel.textContent = "Music";
+  musicLabel.textContent = "Off";
 }
 
 function startMusic() {
@@ -219,7 +219,7 @@ function startMusic() {
   isMusicPlaying = true;
   musicToggle.classList.add("is-playing");
   musicToggle.setAttribute("aria-pressed", "true");
-  musicLabel.textContent = "Playing";
+  musicLabel.textContent = "On";
 }
 
 closeLightbox.addEventListener("click", closePhoto);
@@ -255,3 +255,14 @@ startHeroSlideshow();
 renderCalendar();
 renderGallery();
 initScrollAnimation();
+
+// 브라우저 자동재생 정책 대응: 첫 사용자 인터랙션 시 BGM 자동 시작
+function tryAutoplay() {
+  if (!isMusicPlaying) {
+    startMusic();
+  }
+  document.removeEventListener("click", tryAutoplay);
+  document.removeEventListener("touchstart", tryAutoplay);
+}
+document.addEventListener("click", tryAutoplay);
+document.addEventListener("touchstart", tryAutoplay);
