@@ -35,9 +35,11 @@ let activeHeroIndex = 0;
 let touchStartX = 0;
 let touchStartY = 0;
 let touchEndX = 0;
-let audioContext;
-let musicNodes = [];
 let isMusicPlaying = false;
+
+const bgmAudio = new Audio("BGM.mp3");
+bgmAudio.loop = true;
+bgmAudio.volume = 0.5;
 
 function pickRandom(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -204,15 +206,8 @@ function handleTouchEnd(event) {
 }
 
 function stopMusic() {
-  musicNodes.forEach((node) => {
-    try {
-      if (node.stop) node.stop();
-      if (node.disconnect) node.disconnect();
-    } catch {
-      node.disconnect?.();
-    }
-  });
-  musicNodes = [];
+  bgmAudio.pause();
+  bgmAudio.currentTime = 0;
   isMusicPlaying = false;
   musicToggle.classList.remove("is-playing");
   musicToggle.setAttribute("aria-pressed", "false");
@@ -220,35 +215,7 @@ function stopMusic() {
 }
 
 function startMusic() {
-  audioContext ??= new AudioContext();
-  const master = audioContext.createGain();
-  master.gain.value = 0.035;
-  master.connect(audioContext.destination);
-  musicNodes.push(master);
-
-  const notes = [261.63, 329.63, 392.0, 493.88];
-  notes.forEach((frequency, index) => {
-    const osc = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-    osc.type = index % 2 === 0 ? "sine" : "triangle";
-    osc.frequency.value = frequency / (index === 3 ? 2 : 1);
-    gain.gain.value = index === 0 ? 0.28 : 0.13;
-    osc.connect(gain);
-    gain.connect(master);
-    osc.start(audioContext.currentTime + index * 0.08);
-    musicNodes.push(osc, gain);
-  });
-
-  const pulse = audioContext.createOscillator();
-  const pulseGain = audioContext.createGain();
-  pulse.type = "sine";
-  pulse.frequency.value = 0.08;
-  pulseGain.gain.value = 0.05;
-  pulse.connect(pulseGain);
-  pulseGain.connect(master.gain);
-  pulse.start();
-  musicNodes.push(pulse, pulseGain);
-
+  bgmAudio.play();
   isMusicPlaying = true;
   musicToggle.classList.add("is-playing");
   musicToggle.setAttribute("aria-pressed", "true");
@@ -274,16 +241,12 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "ArrowRight") movePhoto(1);
 });
 
-musicToggle.addEventListener("click", async () => {
+musicToggle.addEventListener("click", () => {
   if (isMusicPlaying) {
     stopMusic();
-    return;
+  } else {
+    startMusic();
   }
-
-  if (audioContext?.state === "suspended") {
-    await audioContext.resume();
-  }
-  startMusic();
 });
 
 updateDday();
