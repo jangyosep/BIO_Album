@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f8f1e8">
     <meta name="description" content="BIO and GYURI wedding studio album">
-    <title>BIO & GYURI | Wedding Album</title>
+    <title>BIO &amp; GYURI | Wedding Album</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -15,13 +15,13 @@
         <strong id="dday">D-Day</strong>
       </div>
       <button class="music-button" id="musicToggle" type="button" aria-pressed="false">
-        <span class="music-icon" aria-hidden="true">♪</span>
+        <span class="music-icon" aria-hidden="true">Audio</span>
         <span id="musicLabel">Music</span>
       </button>
     </header>
 
     <main>
-      <section class="hero" aria-labelledby="heroTitle">
+      <section class="hero reveal" aria-labelledby="heroTitle">
         <img class="hero-image" id="heroImage" src="images/photo-01.jpg" alt="BIO and GYURI wedding portrait">
         <div class="hero-shade"></div>
         <div class="hero-copy">
@@ -31,7 +31,7 @@
         </div>
       </section>
 
-      <section class="intro" aria-label="Wedding introduction">
+      <section class="intro reveal" aria-label="Wedding introduction">
         <p class="small-title">Our Wedding Day</p>
         <h2>Bio and Gyuri begin a new chapter together.</h2>
         <p>
@@ -40,7 +40,37 @@
         </p>
       </section>
 
-      <section class="gallery-section" aria-label="Photo album">
+      <section class="slider-section reveal" aria-label="Featured photo slider">
+        <div class="section-heading">
+          <p class="small-title">Save the Date</p>
+          <h2>26 08 15</h2>
+        </div>
+        <div class="thumb-slider" id="thumbSlider"></div>
+      </section>
+
+      <section class="calendar-section reveal" aria-label="Wedding calendar">
+        <div class="calendar-copy">
+          <p class="small-title">Calendar</p>
+          <h2>Wedding Day</h2>
+          <p>
+            The day BIO and GYURI promise forever. Keep the date close:
+            Saturday, August 15, 2026.
+          </p>
+        </div>
+        <div class="calendar-card">
+          <div class="calendar-header">
+            <span>August</span>
+            <strong>2026</strong>
+          </div>
+          <div class="calendar-grid" id="calendarGrid" aria-label="August 2026 calendar"></div>
+          <div class="calendar-dday">
+            <span id="calendarDday">D-Day</span>
+            <strong>08.15 SAT</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="gallery-section reveal" aria-label="Photo album">
         <div class="section-heading">
           <p class="small-title">Album</p>
           <h2>Moments in Bloom</h2>
@@ -50,10 +80,10 @@
     </main>
 
     <div class="lightbox" id="lightbox" aria-hidden="true">
-      <button class="close-button" id="closeLightbox" type="button" aria-label="Close photo">×</button>
-      <button class="nav-button prev" id="prevPhoto" type="button" aria-label="Previous photo">‹</button>
+      <button class="close-button" id="closeLightbox" type="button" aria-label="Close photo">&times;</button>
+      <button class="nav-button prev" id="prevPhoto" type="button" aria-label="Previous photo">&lsaquo;</button>
       <img id="lightboxImage" alt="Selected wedding portrait">
-      <button class="nav-button next" id="nextPhoto" type="button" aria-label="Next photo">›</button>
+      <button class="nav-button next" id="nextPhoto" type="button" aria-label="Next photo">&rsaquo;</button>
     </div>
 
     <script src="script.js"></script>

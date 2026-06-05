@@ -17,8 +17,11 @@ const quotes = [
 
 const weddingDate = new Date("2026-08-15T00:00:00+09:00");
 const dday = document.querySelector("#dday");
+const calendarDday = document.querySelector("#calendarDday");
 const heroImage = document.querySelector("#heroImage");
 const quote = document.querySelector("#quote");
+const thumbSlider = document.querySelector("#thumbSlider");
+const calendarGrid = document.querySelector("#calendarGrid");
 const gallery = document.querySelector("#gallery");
 const lightbox = document.querySelector("#lightbox");
 const lightboxImage = document.querySelector("#lightboxImage");
@@ -29,6 +32,8 @@ const musicToggle = document.querySelector("#musicToggle");
 const musicLabel = document.querySelector("#musicLabel");
 
 let activePhotoIndex = 0;
+let activeSlideIndex = 0;
+let slideTimer;
 let audioContext;
 let musicNodes = [];
 let isMusicPlaying = false;
@@ -42,14 +47,10 @@ function updateDday() {
   const localMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const weddingMidnight = new Date(weddingDate.getFullYear(), weddingDate.getMonth(), weddingDate.getDate());
   const diff = Math.ceil((weddingMidnight - localMidnight) / 86400000);
+  const label = diff > 0 ? `D-${diff}` : diff === 0 ? "D-Day" : `D+${Math.abs(diff)}`;
 
-  if (diff > 0) {
-    dday.textContent = `D-${diff}`;
-  } else if (diff === 0) {
-    dday.textContent = "D-Day";
-  } else {
-    dday.textContent = `D+${Math.abs(diff)}`;
-  }
+  dday.textContent = label;
+  calendarDday.textContent = label;
 }
 
 function renderRandomHero() {
@@ -59,12 +60,82 @@ function renderRandomHero() {
   quote.textContent = pickRandom(quotes);
 }
 
+function renderSlider() {
+  thumbSlider.innerHTML = "";
+
+  photos.forEach((photo, index) => {
+    const slide = document.createElement("button");
+    slide.className = `slide${index === 0 ? " is-active" : ""}`;
+    slide.type = "button";
+    slide.setAttribute("aria-label", `Open featured wedding photo ${index + 1}`);
+
+    const image = document.createElement("img");
+    image.src = photo.full;
+    image.alt = photo.alt;
+
+    const dateMark = document.createElement("div");
+    dateMark.className = "date-mark";
+    dateMark.setAttribute("aria-label", "Wedding date 26 08 15");
+    ["26", "08", "15"].forEach((part) => {
+      const item = document.createElement("span");
+      item.textContent = part;
+      dateMark.append(item);
+    });
+
+    const caption = document.createElement("div");
+    caption.className = "slide-caption";
+    caption.textContent = "A date to remember";
+
+    slide.append(image, dateMark, caption);
+    slide.addEventListener("click", () => openPhoto(index));
+    thumbSlider.append(slide);
+  });
+
+  slideTimer = window.setInterval(showNextSlide, 4200);
+}
+
+function showNextSlide() {
+  const slides = thumbSlider.querySelectorAll(".slide");
+  if (!slides.length) return;
+
+  slides[activeSlideIndex].classList.remove("is-active");
+  activeSlideIndex = (activeSlideIndex + 1) % slides.length;
+  slides[activeSlideIndex].classList.add("is-active");
+}
+
+function renderCalendar() {
+  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const firstDay = new Date(2026, 7, 1).getDay();
+  const daysInMonth = 31;
+  calendarGrid.innerHTML = "";
+
+  weekdays.forEach((weekday) => {
+    const cell = document.createElement("div");
+    cell.className = "calendar-cell weekday";
+    cell.textContent = weekday;
+    calendarGrid.append(cell);
+  });
+
+  for (let i = 0; i < firstDay; i += 1) {
+    const cell = document.createElement("div");
+    cell.className = "calendar-cell empty";
+    calendarGrid.append(cell);
+  }
+
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const cell = document.createElement("div");
+    cell.className = `calendar-cell day${day === 15 ? " wedding-day" : ""}`;
+    cell.textContent = String(day);
+    calendarGrid.append(cell);
+  }
+}
+
 function renderGallery() {
   gallery.innerHTML = "";
 
   photos.forEach((photo, index) => {
     const button = document.createElement("button");
-    button.className = "photo-card";
+    button.className = "photo-card reveal";
     button.type = "button";
     button.setAttribute("aria-label", `Open wedding photo ${index + 1}`);
 
@@ -77,6 +148,23 @@ function renderGallery() {
     button.addEventListener("click", () => openPhoto(index));
     gallery.append(button);
   });
+}
+
+function initScrollAnimation() {
+  const revealTargets = document.querySelectorAll(".reveal");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { rootMargin: "0px 0px -12% 0px", threshold: 0.12 }
+  );
+
+  revealTargets.forEach((target) => observer.observe(target));
 }
 
 function openPhoto(index) {
@@ -181,4 +269,7 @@ musicToggle.addEventListener("click", async () => {
 
 updateDday();
 renderRandomHero();
+renderSlider();
+renderCalendar();
 renderGallery();
+initScrollAnimation();
