@@ -119,6 +119,12 @@ button {
   object-position: center;
   transform: scale(1.01);
   animation: heroDrift 14s ease-in-out infinite alternate;
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+.hero-image.is-changing {
+  opacity: 0;
+  transform: scale(1.08);
 }
 
 .hero-shade {
@@ -207,91 +213,9 @@ h1 span {
   line-height: 1.8;
 }
 
-.slider-section {
-  padding: 36px clamp(16px, 4vw, 42px) 72px;
-  background: linear-gradient(180deg, var(--ivory), #fbf2e8);
-}
-
 .section-heading {
   width: min(1100px, 100%);
   margin: 0 auto 26px;
-}
-
-.thumb-slider {
-  position: relative;
-  width: min(1120px, 100%);
-  min-height: clamp(360px, 62vw, 620px);
-  margin: 0 auto;
-  overflow: hidden;
-  border-radius: 8px;
-  background: var(--deep-green);
-  box-shadow: var(--shadow);
-}
-
-.slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transform: scale(1.04);
-  transition: opacity 1.1s ease, transform 1.3s ease;
-}
-
-.slide.is-active {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-.slide::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(18, 23, 19, 0.08), rgba(18, 23, 19, 0.6)),
-    linear-gradient(90deg, rgba(18, 23, 19, 0.36), rgba(18, 23, 19, 0.02));
-}
-
-.date-mark {
-  position: absolute;
-  left: clamp(18px, 4vw, 56px);
-  bottom: clamp(18px, 4vw, 54px);
-  z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(58px, 92px));
-  gap: 8px;
-  color: #fffaf4;
-}
-
-.date-mark span {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 1;
-  border: 1px solid rgba(255, 250, 244, 0.48);
-  border-radius: 8px;
-  background: rgba(255, 250, 244, 0.12);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(30px, 6vw, 58px);
-  line-height: 1;
-  text-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(8px);
-}
-
-.slide-caption {
-  position: absolute;
-  right: clamp(18px, 4vw, 54px);
-  bottom: clamp(24px, 5vw, 64px);
-  z-index: 2;
-  color: #fffaf4;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(18px, 3vw, 30px);
-  text-align: right;
-  text-shadow: 0 12px 24px rgba(0, 0, 0, 0.34);
 }
 
 .calendar-section {
@@ -442,22 +366,6 @@ h1 span {
   break-inside: avoid;
 }
 
-.photo-card::after {
-  content: "26 08 15";
-  position: absolute;
-  left: 12px;
-  bottom: 12px;
-  padding: 7px 9px;
-  border: 1px solid rgba(255, 250, 244, 0.42);
-  border-radius: 999px;
-  background: rgba(34, 55, 44, 0.42);
-  color: #fffaf4;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 13px;
-  letter-spacing: 0;
-  backdrop-filter: blur(8px);
-}
-
 .photo-card img {
   display: block;
   width: 100%;
@@ -490,6 +398,27 @@ h1 span {
   max-height: calc(100svh - 108px);
   border-radius: 8px;
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.46);
+  touch-action: pan-y;
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  user-select: none;
+}
+
+.lightbox img.slide-next {
+  opacity: 0;
+  transform: translateX(-42px) scale(0.985);
+}
+
+.lightbox img.slide-prev {
+  opacity: 0;
+  transform: translateX(42px) scale(0.985);
+}
+
+.lightbox img.slide-enter-next {
+  animation: lightboxEnterNext 0.34s ease both;
+}
+
+.lightbox img.slide-enter-prev {
+  animation: lightboxEnterPrev 0.34s ease both;
 }
 
 .close-button,
@@ -584,21 +513,6 @@ h1 span {
     padding-bottom: 52px;
   }
 
-  .thumb-slider {
-    min-height: 430px;
-  }
-
-  .date-mark {
-    grid-template-columns: repeat(3, minmax(50px, 72px));
-  }
-
-  .slide-caption {
-    top: 24px;
-    right: 18px;
-    bottom: auto;
-    max-width: 210px;
-  }
-
   .gallery-section {
     padding-bottom: 52px;
   }
@@ -650,5 +564,27 @@ h1 span {
     animation-duration: 0.001ms !important;
     scroll-behavior: auto !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+@keyframes lightboxEnterNext {
+  from {
+    opacity: 0;
+    transform: translateX(42px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes lightboxEnterPrev {
+  from {
+    opacity: 0;
+    transform: translateX(-42px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
   }
 }

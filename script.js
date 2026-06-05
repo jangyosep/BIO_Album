@@ -20,7 +20,6 @@ const dday = document.querySelector("#dday");
 const calendarDday = document.querySelector("#calendarDday");
 const heroImage = document.querySelector("#heroImage");
 const quote = document.querySelector("#quote");
-const thumbSlider = document.querySelector("#thumbSlider");
 const calendarGrid = document.querySelector("#calendarGrid");
 const gallery = document.querySelector("#gallery");
 const lightbox = document.querySelector("#lightbox");
@@ -32,8 +31,10 @@ const musicToggle = document.querySelector("#musicToggle");
 const musicLabel = document.querySelector("#musicLabel");
 
 let activePhotoIndex = 0;
-let activeSlideIndex = 0;
-let slideTimer;
+let activeHeroIndex = 0;
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
 let audioContext;
 let musicNodes = [];
 let isMusicPlaying = false;
@@ -54,53 +55,26 @@ function updateDday() {
 }
 
 function renderRandomHero() {
-  const selected = pickRandom(photos);
+  activeHeroIndex = Math.floor(Math.random() * photos.length);
+  const selected = photos[activeHeroIndex];
   heroImage.src = selected.full;
   heroImage.alt = selected.alt;
   quote.textContent = pickRandom(quotes);
 }
 
-function renderSlider() {
-  thumbSlider.innerHTML = "";
+function startHeroSlideshow() {
+  window.setInterval(() => {
+    activeHeroIndex = (activeHeroIndex + 1) % photos.length;
+    const next = photos[activeHeroIndex];
+    heroImage.classList.add("is-changing");
 
-  photos.forEach((photo, index) => {
-    const slide = document.createElement("button");
-    slide.className = `slide${index === 0 ? " is-active" : ""}`;
-    slide.type = "button";
-    slide.setAttribute("aria-label", `Open featured wedding photo ${index + 1}`);
-
-    const image = document.createElement("img");
-    image.src = photo.full;
-    image.alt = photo.alt;
-
-    const dateMark = document.createElement("div");
-    dateMark.className = "date-mark";
-    dateMark.setAttribute("aria-label", "Wedding date 26 08 15");
-    ["26", "08", "15"].forEach((part) => {
-      const item = document.createElement("span");
-      item.textContent = part;
-      dateMark.append(item);
-    });
-
-    const caption = document.createElement("div");
-    caption.className = "slide-caption";
-    caption.textContent = "A date to remember";
-
-    slide.append(image, dateMark, caption);
-    slide.addEventListener("click", () => openPhoto(index));
-    thumbSlider.append(slide);
-  });
-
-  slideTimer = window.setInterval(showNextSlide, 4200);
-}
-
-function showNextSlide() {
-  const slides = thumbSlider.querySelectorAll(".slide");
-  if (!slides.length) return;
-
-  slides[activeSlideIndex].classList.remove("is-active");
-  activeSlideIndex = (activeSlideIndex + 1) % slides.length;
-  slides[activeSlideIndex].classList.add("is-active");
+    window.setTimeout(() => {
+      heroImage.src = next.full;
+      heroImage.alt = next.alt;
+      quote.textContent = pickRandom(quotes);
+      heroImage.classList.remove("is-changing");
+    }, 520);
+  }, 5200);
 }
 
 function renderCalendar() {
@@ -184,8 +158,49 @@ function closePhoto() {
 
 function movePhoto(direction) {
   activePhotoIndex = (activePhotoIndex + direction + photos.length) % photos.length;
-  lightboxImage.src = photos[activePhotoIndex].full;
-  lightboxImage.alt = photos[activePhotoIndex].alt;
+  animateLightboxPhoto(direction);
+}
+
+function animateLightboxPhoto(direction) {
+  const outClass = direction > 0 ? "slide-next" : "slide-prev";
+  const inClass = direction > 0 ? "slide-enter-next" : "slide-enter-prev";
+
+  lightboxImage.classList.remove("slide-enter-next", "slide-enter-prev", "slide-next", "slide-prev");
+  lightboxImage.classList.add(outClass);
+
+  window.setTimeout(() => {
+    lightboxImage.src = photos[activePhotoIndex].full;
+    lightboxImage.alt = photos[activePhotoIndex].alt;
+    lightboxImage.classList.remove(outClass);
+    lightboxImage.classList.add(inClass);
+  }, 180);
+
+  window.setTimeout(() => {
+    lightboxImage.classList.remove(inClass);
+  }, 540);
+}
+
+function handleTouchStart(event) {
+  if (!lightbox.classList.contains("is-open")) return;
+  const touch = event.changedTouches[0];
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
+  touchEndX = touch.clientX;
+}
+
+function handleTouchMove(event) {
+  if (!lightbox.classList.contains("is-open")) return;
+  touchEndX = event.changedTouches[0].clientX;
+}
+
+function handleTouchEnd(event) {
+  if (!lightbox.classList.contains("is-open")) return;
+  const touch = event.changedTouches[0];
+  const deltaX = touch.clientX - touchStartX;
+  const deltaY = touch.clientY - touchStartY;
+
+  if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.2) return;
+  movePhoto(deltaX < 0 ? 1 : -1);
 }
 
 function stopMusic() {
@@ -248,6 +263,10 @@ lightbox.addEventListener("click", (event) => {
   if (event.target === lightbox) closePhoto();
 });
 
+lightboxImage.addEventListener("touchstart", handleTouchStart, { passive: true });
+lightboxImage.addEventListener("touchmove", handleTouchMove, { passive: true });
+lightboxImage.addEventListener("touchend", handleTouchEnd, { passive: true });
+
 document.addEventListener("keydown", (event) => {
   if (!lightbox.classList.contains("is-open")) return;
   if (event.key === "Escape") closePhoto();
@@ -269,7 +288,7 @@ musicToggle.addEventListener("click", async () => {
 
 updateDday();
 renderRandomHero();
-renderSlider();
+startHeroSlideshow();
 renderCalendar();
 renderGallery();
 initScrollAnimation();
