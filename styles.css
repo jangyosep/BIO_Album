@@ -1,0 +1,363 @@
+:root {
+  color-scheme: light;
+  --ivory: #fffaf4;
+  --linen: #f6eadb;
+  --sage: #7f9278;
+  --deep-green: #22372c;
+  --rose: #c88978;
+  --ink: #2b2724;
+  --muted: #786d64;
+  --line: rgba(43, 39, 36, 0.14);
+  --shadow: 0 18px 48px rgba(40, 32, 25, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  letter-spacing: 0;
+}
+
+button {
+  font: inherit;
+}
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px clamp(16px, 4vw, 44px);
+  pointer-events: none;
+}
+
+.date-chip,
+.music-button {
+  pointer-events: auto;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  background: rgba(255, 250, 244, 0.78);
+  color: var(--deep-green);
+  box-shadow: 0 12px 28px rgba(27, 32, 27, 0.12);
+  backdrop-filter: blur(18px);
+}
+
+.date-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 8px 13px;
+  border-radius: 999px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.date-chip strong {
+  color: var(--rose);
+  font-weight: 700;
+}
+
+.music-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 92px;
+  min-height: 42px;
+  padding: 8px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.music-button.is-playing {
+  background: rgba(34, 55, 44, 0.9);
+  color: #fffaf4;
+}
+
+.music-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.hero {
+  position: relative;
+  min-height: 92svh;
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+  background: var(--deep-green);
+}
+
+.hero-image,
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-image {
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.01);
+}
+
+.hero-shade {
+  background:
+    linear-gradient(180deg, rgba(20, 25, 21, 0.2) 0%, rgba(20, 25, 21, 0.08) 38%, rgba(20, 25, 21, 0.72) 100%),
+    linear-gradient(90deg, rgba(20, 25, 21, 0.38), rgba(20, 25, 21, 0.04) 58%);
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 1;
+  width: min(760px, calc(100% - 34px));
+  margin: 0 auto;
+  padding: 0 0 clamp(58px, 11vh, 118px);
+  color: #fffaf4;
+  text-align: center;
+  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.42);
+}
+
+.eyebrow,
+.small-title {
+  margin: 0;
+  color: var(--rose);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.hero .eyebrow {
+  color: #f7d3c8;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 18px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(48px, 12vw, 112px);
+  font-weight: 500;
+  line-height: 0.94;
+}
+
+h1 span {
+  display: inline-block;
+  color: #f3c2b5;
+  font-size: 0.72em;
+}
+
+.quote {
+  max-width: 590px;
+  margin: 0 auto;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(18px, 3.4vw, 28px);
+  line-height: 1.45;
+}
+
+.intro {
+  width: min(860px, calc(100% - 36px));
+  margin: 0 auto;
+  padding: clamp(54px, 9vw, 98px) 0 clamp(34px, 7vw, 64px);
+  text-align: center;
+}
+
+.intro h2,
+.section-heading h2 {
+  margin: 8px 0 14px;
+  color: var(--deep-green);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(29px, 6vw, 54px);
+  font-weight: 500;
+  line-height: 1.08;
+}
+
+.intro p:last-child {
+  max-width: 650px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.gallery-section {
+  padding: 22px clamp(16px, 4vw, 42px) 82px;
+  background: linear-gradient(180deg, var(--ivory) 0%, var(--linen) 100%);
+}
+
+.section-heading {
+  width: min(1100px, 100%);
+  margin: 0 auto 26px;
+}
+
+.gallery {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  columns: 3 260px;
+  column-gap: 16px;
+}
+
+.photo-card {
+  display: block;
+  width: 100%;
+  margin: 0 0 16px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  break-inside: avoid;
+}
+
+.photo-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.photo-card:hover img {
+  transform: scale(1.035);
+  filter: saturate(1.04) contrast(1.02);
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 54px 16px;
+  background: rgba(16, 22, 18, 0.9);
+}
+
+.lightbox.is-open {
+  display: flex;
+}
+
+.lightbox img {
+  max-width: min(100%, 1180px);
+  max-height: calc(100svh - 108px);
+  border-radius: 8px;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.46);
+}
+
+.close-button,
+.nav-button {
+  position: fixed;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 250, 244, 0.14);
+  color: #fffaf4;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+}
+
+.close-button {
+  top: 18px;
+  right: 18px;
+  width: 44px;
+  height: 44px;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.nav-button {
+  top: 50%;
+  width: 46px;
+  height: 46px;
+  font-size: 36px;
+  transform: translateY(-50%);
+}
+
+.nav-button.prev {
+  left: 16px;
+}
+
+.nav-button.next {
+  right: 16px;
+}
+
+@media (max-width: 720px) {
+  .topbar {
+    padding: 10px 12px;
+  }
+
+  .date-chip,
+  .music-button {
+    min-height: 38px;
+    font-size: 12px;
+  }
+
+  .music-button {
+    min-width: 78px;
+  }
+
+  .hero {
+    min-height: 88svh;
+  }
+
+  .hero-copy {
+    width: min(100% - 28px, 520px);
+    padding-bottom: 52px;
+  }
+
+  .gallery-section {
+    padding-bottom: 52px;
+  }
+
+  .gallery {
+    columns: 2 150px;
+    column-gap: 10px;
+  }
+
+  .photo-card {
+    margin-bottom: 10px;
+  }
+
+  .nav-button {
+    top: auto;
+    bottom: 18px;
+    transform: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .date-chip span {
+    display: none;
+  }
+
+  .date-chip {
+    min-width: 74px;
+    justify-content: center;
+  }
+
+  .intro p:last-child {
+    font-size: 15px;
+  }
+}

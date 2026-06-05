@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f8f1e8">
+    <meta name="description" content="BIO and GYURI wedding studio album">
+    <title>BIO & GYURI | Wedding Album</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar" aria-label="Wedding date">
+      <div class="date-chip">
+        <span>2026.08.15</span>
+        <strong id="dday">D-Day</strong>
+      </div>
+      <button class="music-button" id="musicToggle" type="button" aria-pressed="false">
+        <span class="music-icon" aria-hidden="true">♪</span>
+        <span id="musicLabel">Music</span>
+      </button>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="heroTitle">
+        <img class="hero-image" id="heroImage" src="images/photo-01.jpg" alt="BIO and GYURI wedding portrait">
+        <div class="hero-shade"></div>
+        <div class="hero-copy">
+          <p class="eyebrow">Wedding Studio Album</p>
+          <h1 id="heroTitle">BIO <span>&amp;</span> GYURI</h1>
+          <p class="quote" id="quote">Every love story is beautiful, but ours is my favorite.</p>
+        </div>
+      </section>
+
+      <section class="intro" aria-label="Wedding introduction">
+        <p class="small-title">Our Wedding Day</p>
+        <h2>Bio and Gyuri begin a new chapter together.</h2>
+        <p>
+          August 15, 2026. A quiet collection of studio moments, warm light,
+          garden greens, and the beginning of a lifetime side by side.
+        </p>
+      </section>
+
+      <section class="gallery-section" aria-label="Photo album">
+        <div class="section-heading">
+          <p class="small-title">Album</p>
+          <h2>Moments in Bloom</h2>
+        </div>
+        <div class="gallery" id="gallery"></div>
+      </section>
+    </main>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <button class="close-button" id="closeLightbox" type="button" aria-label="Close photo">×</button>
+      <button class="nav-button prev" id="prevPhoto" type="button" aria-label="Previous photo">‹</button>
+      <img id="lightboxImage" alt="Selected wedding portrait">
+      <button class="nav-button next" id="nextPhoto" type="button" aria-label="Next photo">›</button>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
